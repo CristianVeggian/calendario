@@ -1,0 +1,12 @@
+library IEEE;
+use IEEE.NUMERIC_STD.all;
+
+entity calendario is
+	port(
+		clk	: in bit;
+		data  : in std_logic;
+		sel	: in bit;
+		add	: in bit;
+		);
+end calendario;
+
