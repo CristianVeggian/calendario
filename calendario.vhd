@@ -39,8 +39,8 @@ architecture logic of calendario is
 	signal horF: natural range 0 to 24;
 	signal minF: natural range 0 to 60;
 	
-	signal diaO: positive range 1 to 32;
-	signal mesO: positive range 1 to 13;
+	signal diaO: natural range 0 to 31;
+	signal mesO: natural range 0 to 12;
 	signal anoO: natural range 0 to 100;
 	signal horO: natural range 0 to 24;
 	signal minO: natural range 0 to 60;
@@ -110,13 +110,29 @@ architecture logic of calendario is
 					if rising_edge(add) then
 						case E is
 							when H 	=>
-								horO <= horO + 1;		
+								horO <= horO + 1;
+								if horO > 24 - hor then
+									horO <= 0;
+								end if;
 							when Mi 	=>
 								minO <= minO + 1;
+								if minO > 60 - min then
+									minO <= 0;
+								end if;
 							when D 	=>
 								diaO <= diaO + 1;
+								if (diaO > 28 - dia and mes = 2 and not(ano rem 4 = 0)) or (diaO > 29 - dia and mes = 2 and ano rem 4 = 0) then
+									diaO <= 0;
+								elsif diaO > 30 - dia and (mes = 4 or mes = 6 or mes = 9 or mes = 11) then
+									diaO <= 0;
+								elsif dia > 31 - dia then
+									diaO <= 0;
+								end if;
 							when Me 	=> 
 								mesO <= mesO + 1;
+								if mesO > 12 - mes then
+									mesO <= 0;
+								end if;
 							when A 	=> 
 								anoO <= anoO + 1;
 							end case;			
