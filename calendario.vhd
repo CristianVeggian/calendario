@@ -110,40 +110,16 @@ architecture logic of calendario is
 					if rising_edge(add) then
 						case E is
 							when H 	=>
-								horO <= horO + 1;
-								horF <= hor + horO;
-								if horF = 24 then
-									horF <= 0;
-								end if;						
+								horO <= horO + 1;		
 							when Mi 	=>
 								minO <= minO + 1;
-								minF <= min + minO;
-								if minF = 60 then
-									minF <= 0;
-								end if;
 							when D 	=>
 								diaO <= diaO + 1;
-								diaF <= dia + diaO;
-								if (diaF = 29 and mes = 2 and not(ano rem 4 = 0)) or (diaF = 30 and mes = 2 and ano rem 4 = 0) then
-									diaF <= 1;
-								elsif diaF = 31 and (mes = 4 or mes = 6 or mes = 9 or mes = 11) then
-									diaF <= 1;
-								elsif diaF = 32 then
-									diaF <= 1;
-								end if;
 							when Me 	=> 
 								mesO <= mesO + 1;
-								mesF <= mes + mesO;
-								if mesF = 13 then
-									mesF <= 1;
-								end if;
 							when A 	=> 
 								anoO <= anoO + 1;
-								anoF <= ano + anoO;
-								if anoF = 100 then
-									anoF <= 0;
-								end if;							
-						end case;			
+							end case;			
 					end if;	
 			end process;
 			
@@ -151,6 +127,10 @@ architecture logic of calendario is
 			begin
 			-- AQUI COMEÇAM OS DISPLAYS --
 				if rising_edge(clk) and data = '0' then -- hora
+						horF <= hor + horO;
+							if horF = 24 then
+								horF <= 0;
+							end if;
 						if horF = 0 then
 							  disp1 <= "11000000";
 							  disp2 <= "11000000";
@@ -229,6 +209,10 @@ architecture logic of calendario is
 							  disp2 <= "10110000";
 						end if; -- acabou as horas
 						-----------------------------------------------------------
+						minF <= min + minO;
+								if minF = 60 then
+									minF <= 0;
+								end if;
 						if minF = 0 then
 							  disp3 <= "11000000";
 							  disp4 <= "11000000";
@@ -623,6 +607,14 @@ architecture logic of calendario is
 							  disp6 <= "11000000";
 						end if; -- acabou os minutos
 				elsif rising_edge(clk) and data = '1' then -- DIAAAAA ____________________________%%%%%%%%%%%%_____________$$$$$$$$$$__________#########3
+						diaF <= dia + diaO;
+						if (diaF = 29 and mes = 2 and not(ano rem 4 = 0)) or (diaF = 30 and mes = 2 and ano rem 4 = 0) then
+							diaF <= 1;
+						elsif diaF = 31 and (mes = 4 or mes = 6 or mes = 9 or mes = 11) then
+							diaF <= 1;
+						elsif diaF = 32 then
+							diaF <= 1;
+						end if;
 						if diaF = 1 then		
 							  disp1 <= "11000000";
 							  disp2 <= "11111001";
@@ -725,6 +717,10 @@ architecture logic of calendario is
 						end if; -- acabou os dias
 						
 						-----------------------------------------------------------
+						mesF <= mes + mesO;
+						if mesF = 13 then
+							mesF <= 1;
+						end if;
 						if mesF = 1 then		
 							  disp3 <= "11000000";
 							  disp4 <= "11111001";
@@ -764,6 +760,10 @@ architecture logic of calendario is
 							  disp3 <= "11111001";
 							  disp4 <= "10100100";
 						end if; -- acabou os meses
+						anoF <= ano + anoO;
+						if anoF = 100 then
+							anoF <= 0;
+						end if;							
 						if anoF = 0 then
 							  disp5 <= "11000000";
 							  disp6 <= "11000000";
